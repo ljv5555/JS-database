@@ -1,0 +1,170 @@
+<!doctype html>
+<html>
+<head><title>In-Browser Client-Side JavaScript SQLITE sample</title>
+<style>
+table,textarea{
+width:calc(100% - 20px);
+margin: 10px 10px 10px 10px;
+padding: 10px 10px 10px 10px;
+}
+td{width:calc(50% - 10px);}
+body{font-family:arial;}
+.indiv,.indiv2,.outdiv,h4,td,th
+{
+margin: 10px 10px 10px 10px;
+padding: 10px 10px 10px 10px;
+background:black;
+color:white;
+}
+.outdiv, .indiv,.indiv2, td, th
+{
+border:1px solid white;
+}
+.indiv,.indiv2,.outdiv
+{
+min-height:100px;
+}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>
+<script src="js/sqlite.js"></script>
+<script>
+var db = false;
+var dbr = false;
+
+function sqlTableToHtmlTable(st)
+{
+	var rtn = '<table>';
+	var first=true;
+	_.each(st,function(row)
+	{
+		try{console.log(JSON.stringify(row));}catch(ee){}
+		if(first)
+		{
+			first=false;
+			rtn+='<tr>';
+			_.each(row,function(cell){
+				rtn+='<th>'
+				+_.escape(cell['column'])
+				+'</th>';
+			});
+			rtn+='</tr>';
+		}
+		rtn+='<tr>';
+		_.each(row,function(cell){
+			rtn+='<td title="'
+			+_.escape(cell['column'])+'">'
+			+_.escape(cell['value'])
+			+'</td>';
+		});
+		rtn+='</tr>';
+	});
+	rtn+='</table>';
+	return rtn;
+}
+
+function init()
+{
+	db = SQL.open();
+}
+function go()
+{
+	if(!db){init();}
+	dbr=db.exec(jQuery('.indiv').text());
+	jQuery('.outdiv').html(sqlTableToHtmlTable(dbr));
+}
+
+</script>
+
+
+
+
+</head>
+<body>
+<h4>In-Browser Client-Side JavaScript SQLITE sample</h4>
+<table>
+<tr>
+<td><h5>Input SQL</h5></td><td><h5>Result</h5></td>
+</tr>
+<tr>
+<td>
+<pre id="indiv" class="indiv" contenteditable="true">
+CREATE TABLE table1(row_id integer, text1 text, text2 text);
+INSERT INTO table1 VALUES(1,'n1','v1');
+INSERT INTO table1 VALUES(2,'n2','v2');
+
+select * from table1
+
+</pre>
+</td>
+<td>
+<pre class="outdiv" id="outdiv"></pre>
+
+</td>
+</tr>
+<tr>
+<td>
+<button type="button" onclick="go();">Execute</button>
+</td>
+<td>
+</td>
+</tr>
+</table>
+<p/>
+<!-- 
+<div>
+<h4>Load HTML as Table</h4>
+<div>Name: <input class="tablename" value="xmltable1"/>
+	<button onclick="gox();" type="button">go</button></div>
+<textarea class="indiv2" style="font-size:10px;height:200px;">
+	
+	<root>
+		<row>
+			<child1>text11</child1>
+			<child2>text21</child2>
+			<child3>text31</child3>
+			<child4>text41</child4>
+			<child5>text51</child5>
+		</row>
+		<row>
+			<child1>text12</child1>
+			<child2>text22</child2>
+			<child3>text32</child3>
+			<child4>text42</child4>
+			<child5>text52</child5>
+		</row>
+		<row>
+			<child1>text13</child1>
+			<child2>text23</child2>
+			<child3>text33</child3>
+			<child4>text43</child4>
+			<child5>text53</child5>
+		</row>
+	</root>
+</textarea>
+<script>
+function gox()
+{
+
+	window.nnn=[];
+	var root=jQuery('<div/>').append(jQuery('.indiv2').val())[0].children[0];
+	 
+	  // Retrieve each customer in turn.
+	  for (var i = 0; i < root.children.length; i++)
+	  {
+	   var node = root.children[i];
+	  console.log(node);
+	  window.nnn.push(node);
+	   // Access each of the data values.
+	  // var elements = node.getElementsByTagName("*");
+	   
+	  // console.log(elements);
+	   
+	  }
+	   
+}
+</script>
+</div>
+-->
+</body>
+</html>
